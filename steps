@@ -1,0 +1,67 @@
+STEP 1 :
+    create a eks cluster 
+    "eksctl create cluster --name demo-cluster-1 --region us-east-1 --fargate --profile aws-2024"
+
+STEP 2 : 
+    check if the cluster is created 
+    "aws eks update-kubeconfig --region us-east-1 --name demo-cluster-1 --profile aws-2024" allows to communicate using kubectl
+    "cat ~/.kube/config "
+
+STEP 3 :
+    create your fargate profile so you can have your namespace
+    "eksctl create fargateprofile \
+    --cluster demo-cluster-1 \
+    --region us-east-1 \
+    --name alb-sample-app \
+    --namespace test \
+    --profile aws-2024"
+
+STEP 4 : 
+    "kubeclt apply -f ." 
+    "kubectl get pods -n test" 
+    "kubectl get svc -n test"
+    "kubectk get ingress -n test"
+
+STEP 5 :
+    configure oidc connector so other aws services can access your pods
+    "export cluster_name=demo-cluster-1"
+    "oidc_id=$(aws eks describe-cluster --name $cluster_name --query "cluster.identity.oidc.issuer" --profile aws-2024 --output text | cut -d '/' -f 5) "
+    "eksctl utils associate-iam-oidc-provider --cluster $cluster_name --profile aws-2024 --approve "
+
+STEP 6 :
+    now for our application load balancer(alb) to communicate with our services we need to create iam policy
+    contains a list of permission required
+    "curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json"
+    "aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam_policy.json \
+    --profile aws-2024"
+
+    "eksctl create iamserviceaccount \
+  --cluster=demo-cluster-1 \
+  --namespace=kube-system \
+  --name=aws-load-balancer-controller \
+  --role-name AmazonEKSLoadBalancerControllerRole \
+  --attach-policy-arn=arn:aws:iam::680521533360:policy/AWSLoadBalancerControllerIAMPolicy \
+  --profile aws-2024 \
+  --approve"
+    
+    if gives error when creating serviceaccount use "--override-existing-serviceaccounts"
+    delete the stack from cloudformation first 
+    and also update the name of the imaserviceaccount
+
+STEP 7 :
+    deply alb controller
+    "helm repo add eks https://aws.github.io/eks-charts"
+    "helm repo update eks"
+    "helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system \
+  --set clusterName=demo-cluster-1 \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller-2 \
+  --set region=us-east-1 \
+  --set vpcId=vpc-0b266e502edab704b"
+
+  verify alb controller is created in loadbalancers
+
+STEP 8 :
+    "kubectl get ingress -n test" this will give public ip 
