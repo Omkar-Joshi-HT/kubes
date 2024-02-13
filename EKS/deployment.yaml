@@ -14,7 +14,7 @@ spec:
         app.kubernetes.io/name: personal-profile
     spec:
       containers:
-        - image: public.ecr.aws/n2d8l6y5/web-app:lates
+        - image: public.ecr.aws/n2d8l6y5/web-app:latest
           imagePullPolicy: Always
           name: personal-profile
           ports:
