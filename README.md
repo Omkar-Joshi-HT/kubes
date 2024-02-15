@@ -39,21 +39,24 @@ argocd app create kustom-webapp-prod \
 ```
 # Kustomize Commands:
 ```
-kustomize build <path>     # Produce a customized set of Kubernetes manifests from a directory or URL.
-kustomize create <name>    # Create a new kustomization directory with a given name.
-kustomize edit <path>      # Open the kustomization file for editing.
-kustomize edit add <field> # Add a field to the kustomization file.
-kustomize edit set <field> # Set a field in the kustomization file.
-kustomize edit remove <field> # Remove a field from the kustomization file.
-kustomize build . | kubectl apply -f -  # Build and apply the customized Kubernetes manifests directly.
+kustomize build <path>                   # Produce a customized set of Kubernetes manifests from a directory or URL.
+kustomize create <name>                  # Create a new kustomization directory with a given name.
+kustomize edit <path>                    # Open the kustomization file for editing.
+kustomize edit add <field>               # Add a field to the kustomization file.
+kustomize edit set <field>               # Set a field in the kustomization file.
+kustomize edit remove <field>            # Remove a field from the kustomization file.
+kustomize build . | kubectl apply -f -   # Build and apply the customized Kubernetes manifests directly.
 ```
 # Argo CD Command Cheat Sheet:
 ```
-argocd app create        # Create a new Argo CD application.
-argocd app list          # List all applications in Argo CD.
-argocd app logs <appname> # Get the application’s log output.
-argocd app get <appname> # Get information about an Argo CD application.
-argocd app diff <appname> # Compare the application’s configuration to its source repository.
-argocd app sync <appname> # Synchronize the application with its source repository.
-argocd app history <
+argocd app create                  # Create a new Argo CD application.
+argocd app list                    # List all applications in Argo CD.
+argocd app logs <appname>          # Get the application’s log output.
+argocd app get <appname>           # Get information about an Argo CD application.
+argocd app diff <appname>          # Compare the application’s configuration to its source repository.
+argocd app sync <appname>          # Synchronize the application with its source repository.
+argocd app history <appname>       # Get information about an Argo CD application.
+argocd app rollback <appname>      # Rollback to a previous version
+argocd app set <appname>           # Set the application’s configuration.
+argocd app delete <appname>        # Delete an Argo CD application.
 ```
