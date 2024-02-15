@@ -9,6 +9,6 @@ patchesStrategicMerge:
 
 commonLabels:
   app: web-app
-  
+
 configMapGenerator:
-- name: mykustom-map
+- name: kustom-config-map
