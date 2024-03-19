@@ -7,4 +7,4 @@ spec:
     spec:
       containers:
         - name: mycontainer
-          image: "public.ecr.aws/n2d8l6y5/web-app:f0c8ad778352c0cc0e23fc7844089e20161bdec6"
+          image: "public.ecr.aws/n2d8l6y5/web-app:70ca5d945333499660b1dc32d0a6df2a131e11a1"
